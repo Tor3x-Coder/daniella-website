@@ -1,24 +1,50 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, EB_Garamond, Mrs_Saint_Delafield } from "next/font/google";
+import localFont from "next/font/local";
 import { meta } from "@/lib/content";
 import "./globals.css";
 
-const display = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+// Fonts are self-hosted from the `fonts/` folder rather than pulled with
+// `next/font/google`.
+//
+// Why: `next/font/google` downloads the font files from fonts.googleapis.com
+// *at build time*, and the build fails outright if it can't reach Google.
+// That makes deploys depend on a third party being up and reachable from
+// whatever machine runs the build. Self-hosting removes that failure mode,
+// and it also means Daniella's browser makes no request to Google at all.
+//
+// The CSS variable names below are unchanged (`--font-display`, `--font-body`,
+// `--font-hand`), so tailwind.config.ts and every component work exactly as
+// before — nothing else needed editing.
+//
+// Files are copied from the @fontsource packages in devDependencies. Refresh
+// them any time with: npm run sync:fonts
+const display = localFont({
+  src: [
+    { path: "../fonts/cormorant-garamond-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/cormorant-garamond-600.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/cormorant-garamond-700.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-display",
+  display: "swap",
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
-const body = EB_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const body = localFont({
+  src: [
+    { path: "../fonts/eb-garamond-400.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/eb-garamond-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/eb-garamond-600.woff2", weight: "600", style: "normal" },
+  ],
   variable: "--font-body",
+  display: "swap",
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
-const hand = Mrs_Saint_Delafield({
-  subsets: ["latin"],
-  weight: "400",
+const hand = localFont({
+  src: [{ path: "../fonts/mrs-saint-delafield-400.woff2", weight: "400", style: "normal" }],
   variable: "--font-hand",
+  display: "swap",
+  fallback: ["Segoe Script", "Bradley Hand", "cursive"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +61,9 @@ export const metadata: Metadata = {
     description: meta.description,
   },
   icons: {
-    icon: "/favicon.ico",
+    // SVG scales crisply at any size and is supported by every modern browser.
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: "/favicon.svg",
   },
 };
 

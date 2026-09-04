@@ -7,3 +7,10 @@ out
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+
+# Firebase CLI local state — created by `firebase login`/`firebase deploy`.
+# .firebaserc IS committed on purpose: it records which project this deploys to.
+.firebase
+firebase-debug.log
+firebase-debug.*.log
+.firebaserc.bak

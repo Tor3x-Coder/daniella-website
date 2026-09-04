@@ -1,0 +1,27 @@
+# Keep git from ever treating these as text. Without this, a stray encoding
+# or line-ending conversion can silently corrupt photos, fonts and audio —
+# and git then refuses to show diffs for the affected file at all.
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.gif  binary
+*.webp binary
+*.avif binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
+*.mp3  binary
+*.m4a  binary
+*.ogg  binary
+*.wav  binary
+
+# The letter text is prose; keep it out of diffs-noise-free normalisation
+# fights between Windows and Linux checkouts.
+*.md   text
+*.ts   text
+*.tsx  text
+*.js   text
+*.mjs  text
+*.css  text
+*.json text
+*.svg  text

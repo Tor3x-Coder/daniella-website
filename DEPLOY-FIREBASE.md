@@ -76,21 +76,29 @@ of Firebase, so expect to add a few numbers.
 
 ## Step 4 — Point this repo at that project
 
-From the repo folder, using your real Project ID:
+`.firebaserc` is **already set to `for-daniella`**. If that's your Project ID,
+skip this step entirely — go straight to Step 5.
+
+If your Project ID is different, run this with your real one:
 
 ```bash
 firebase use for-daniella-4c2a1
 ```
 
-That writes `.firebaserc` for you. (Alternatively, open `.firebaserc` and
-replace `YOUR-PROJECT-ID` with the real ID — same result.)
-
-Confirm:
+That rewrites `.firebaserc` for you. Confirm with:
 
 ```bash
 firebase use            # prints the active project
 firebase projects:list  # lists everything your account can see
 ```
+
+> **Gotcha:** the Firebase CLI reads and validates `.firebaserc` *before* it
+> runs any command. If that file contains a malformed Project ID — an
+> uppercase letter, a space, a placeholder — then **every** command fails with
+> `Error: Invalid project id`, including `firebase login` and the very
+> `firebase use` you'd use to fix it. The escape is to edit `.firebaserc`
+> directly in a text editor. Project IDs must be lowercase letters, digits
+> and hyphens only.
 
 ## Step 5 — Build and deploy
 
@@ -218,8 +226,17 @@ letter text.
 
 ## Troubleshooting
 
-**`Error: Failed to get Firebase project YOUR-PROJECT-ID`**
-You haven't replaced the placeholder. Run `firebase use <your-real-project-id>`.
+**`Error: Invalid project id: YOUR-PROJECT-ID` (or any other ID) — on every command, including `firebase login`**
+`.firebaserc` holds an ID Firebase rejects, and the CLI validates that file
+before running anything. Project IDs must be **lowercase letters, digits and
+hyphens only** — no capitals, no spaces, no underscores. Edit `.firebaserc`
+directly in a text editor and put the real lowercase ID in, then retry. You
+cannot fix this with `firebase use`, because `firebase use` is itself blocked
+by it.
+
+**`Error: Failed to get Firebase project <id>`**
+The ID is well-formed but doesn't exist, or your logged-in account can't see
+it. Check `firebase projects:list`.
 
 **`HTTP Error: 404, Project ... does not exist`**
 Wrong Project ID, or you're logged into a different Google account than the

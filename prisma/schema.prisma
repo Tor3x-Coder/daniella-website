@@ -1,0 +1,53 @@
+// Prisma schema for "For Daniella"
+// Deliberately minimal. The letter itself works with zero database
+// connectivity — this only powers an optional "she opened it" record
+// and a place to store memories/photos if you ever want to manage them
+// from a database instead of hardcoding them in lib/content.ts.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Letter {
+  id        String   @id @default(cuid())
+  title     String   @default("For Daniella")
+  createdAt DateTime @default(now())
+  memories  Memory[]
+  photos    Photo[]
+  visits    Visit[]
+}
+
+model Memory {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  order     Int      @default(0)
+  letterId  String
+  letter    Letter   @relation(fields: [letterId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  filename  String
+  caption   String?
+  order     Int      @default(0)
+  letterId  String
+  letter    Letter   @relation(fields: [letterId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+// A single row is written the first time the letter is opened, purely
+// so you can know it was read. Never required for the site to function.
+model Visit {
+  id         String   @id @default(cuid())
+  letterId   String?
+  letter     Letter?  @relation(fields: [letterId], references: [id], onDelete: SetNull)
+  openedAt   DateTime @default(now())
+  userAgent  String?
+}
